@@ -24,7 +24,7 @@ Follow these steps to set up and run the frontend locally:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/frontend-repo.git
+git https://github.com/iamrupambiswas/personal-diary-frontend.git
 cd frontend-repo
 ```
 
@@ -63,7 +63,7 @@ Developed by **Rupam Biswas**.
 
 For any queries or suggestions, feel free to reach out!
 
-- [LinkedIn](https://www.linkedin.com/in/your-linkedin-id)
-- [Twitter](https://twitter.com/your-twitter-id)
+- [LinkedIn](https://www.linkedin.com/in/iamrupambiswas/)
+- [Twitter](https://x.com/iam_rupambiswas)
 
 ---
