@@ -1,4 +1,6 @@
 import './App.css';
+import SignUp from './components/SignUpPage';
+import Login from './components/LoginPage';
 import DiaryEntries from "./components/DiaryEntries";
 import AddEntry from './components/AddEntry';
 import EntryDetail from './components/EntryDetail';
@@ -18,6 +20,8 @@ function App() {
         {/* Main Content */}
         <main className="flex-1 p-6 overflow-y-auto">
           <Routes>
+            <Route path='/sign-up' element={<SignUp />} />
+            <Route path='/login' element={<Login />} />
             <Route path='/' element={<DiaryEntries />} />
             <Route path='/add-entry' element={<AddEntry />} />
             <Route path="/entry/:id" element={<EntryDetail />} />

@@ -2,14 +2,31 @@ import { useState, useEffect } from 'react';
 import { getEntries, deleteEntry } from '../api/diaryApi';
 import DiaryCard from './DiaryCard';
 import { motion } from 'framer-motion';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { PlusIcon, DocumentTextIcon } from '@heroicons/react/24/solid';
 
 const DiaryEntries = () => {
   const [entries, setEntries] = useState([]);
   const [successMessage, setSuccessMessage] = useState(null);
   const location = useLocation();
+  
+  // Authentication state (this would typically come from context or a global state in real-world apps)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);  // Manage user login status
+  const [username, setUsername] = useState('');
+  const navigate = useNavigate();
 
+
+  useEffect(() => {
+    // Check if user data exists in localStorage
+    const data = localStorage.getItem('user');
+    if (data) {
+      const userObject = JSON.parse(data); // Parse the string to an object
+      setUsername(userObject.username);  // Set the username from localStorage
+      setIsLoggedIn(true);  // Set the login state to true
+    } else {
+      setIsLoggedIn(false);  // User is not logged in if no data is found
+    }
+  }, []);
 
   useEffect(() => {
     if (location.state?.successMessage) {
@@ -51,6 +68,14 @@ const DiaryEntries = () => {
     }
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername('');
+    localStorage.removeItem('user'); 
+    localStorage.removeItem('authToken');
+    navigate('/login');
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -73,6 +98,30 @@ const DiaryEntries = () => {
             {successMessage}
           </motion.div>
         )}
+
+        {/* Conditional rendering for login state */}
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            {isLoggedIn ? (
+              <div className="flex items-center">
+                <p className="text-gray-700 font-semibold">Welcome, {username}</p>
+                <button
+                  onClick={handleLogout}
+                  className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
 
         {/* Conditional rendering for empty state */}
         {entries.length === 0 ? (

@@ -4,6 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
 
 const AddEntry = () => {
+    const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem('user');
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login'); // Redirect to login page if not logged in
+    }
+  }, [isLoggedIn, navigate]);
+
+
     const [entries, setEntries] = useState([]);
     const [newEntry, setNewEntry] = useState({ 
         title: '', 
@@ -12,7 +22,6 @@ const AddEntry = () => {
     });
     const [isLoading, setIsLoading] = useState(false); // For API call loading state
     const [error, setError] = useState(null); // For error handling
-    const navigate = useNavigate();
 
     // Fetch entries on mount
     useEffect(() => {
@@ -41,7 +50,7 @@ const AddEntry = () => {
         setError(null);
         try {
             const addedEntry = await addEntry(newEntry);
-            setEntries([addedEntry, ...entries]); // Add the new entry to the list
+            setEntries([addedEntry, ...entries]);
             setNewEntry({ 
                 title: '', 
                 date: new Date().toISOString().split('T')[0], // Reset to current date

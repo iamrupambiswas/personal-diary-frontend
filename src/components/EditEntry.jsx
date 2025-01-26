@@ -16,6 +16,7 @@ const EditEntry = () => {
             setIsLoading(true);
             setError(null);
             try {
+                console.log(id);
                 const fetchedEntry = await getEntryById(id);
                 console.log('Fetched Entry:', fetchedEntry); // Debug API response
                 setEntry(fetchedEntry);
@@ -31,14 +32,11 @@ const EditEntry = () => {
     }, [id]);
 
     const handleChange = (e) => {
-        setEntry((prevEntry) => {
-            const updatedEntry = [...prevEntry]; // Create a copy of the array
-            updatedEntry[0] = {
-                ...updatedEntry[0], // Update the first object in the array
-                [e.target.name]: e.target.value,
-            };
-            return updatedEntry;
-        });
+        const { name, value } = e.target;
+        setEntry((prevEntry) => ({
+            ...prevEntry, // Copy previous entry data
+            [name]: value, // Update only the modified field
+        }));
     };
 
     const handleEditEntry = async (e) => {
@@ -47,9 +45,9 @@ const EditEntry = () => {
     setError(null);
 
     const updatedEntry = {
-        title: entry[0].title, // Ensure title is correctly set
-        date: entry[0].date,   // Ensure date is correctly set
-        content: entry[0].content // Ensure content is correctly set
+        title: entry.title, // Ensure title is correctly set
+        date: entry.date,   // Ensure date is correctly set
+        content: entry.content // Ensure content is correctly set
     };
 
     try {
@@ -78,11 +76,11 @@ const EditEntry = () => {
     if (error) return <p className="text-red-500">{error}</p>;
 
     // If entry is null, show a message
-    if (!entry || !entry[0]) return <p>Entry not found!</p>;
+    // if (!entry || !entry[0]) return <p>Entry not found!</p>;
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full" key={entry[0]?.id}>
+            <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full" key={entry.id}>
                 <button 
                     onClick={() => navigate(-1)} 
                     className="text-primary font-semibold hover:underline mb-4 flex items-center"
@@ -100,7 +98,7 @@ const EditEntry = () => {
                             type="text"
                             id="title"
                             name="title"
-                            value={entry[0]?.title || ''}  // Ensure empty string fallback
+                            value={entry.title || ''}  // Ensure empty string fallback
                             onChange={handleChange}  // Handle input change to update the state
                             placeholder="Enter a title for your entry"
                             className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -115,7 +113,7 @@ const EditEntry = () => {
                             type="text"
                             id="date"
                             name="date"
-                            value={formatDate(entry[0]?.date) || ''}  // Ensure empty string fallback
+                            value={formatDate(entry.date) || ''}  // Ensure empty string fallback
                             readOnly
                             className="w-full border border-gray-300 rounded-lg p-2 bg-gray-100 cursor-not-allowed focus:outline-none"
                         />
@@ -127,7 +125,7 @@ const EditEntry = () => {
                         <textarea
                             id="content"
                             name="content"
-                            value={entry[0]?.content || ''}  // Ensure empty string fallback
+                            value={entry.content || ''}  // Ensure empty string fallback
                             onChange={handleChange}  // Handle input change to update the state
                             placeholder="Write your thoughts here..."
                             rows="5"
